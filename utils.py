@@ -1,4 +1,4 @@
-from init_db import engine, Main
+from init_db import engine
 from sqlmodel import select, or_, col, Session
 from models import Membres, Cours, Cartes_Acces, Coachs, Inscriptions
 
@@ -9,7 +9,17 @@ def ajouter_ligne(item):
         session.commit()
         session.refresh(item)
 
+def obtenir_list_coachs():    
+    with Session(engine) as session:
+        return session.exec(select(Coachs)).all()
 
+def supprimer_coach(id):
+    with Session(engine) as session:
+        coach = session.exec(select(Coachs).where(Coachs.id == id)).one()
+        print(f"DEBUG: {coach}")
+        session.delete(coach)
+        session.commit()
+        
 
 
 # if __name__ == "__main__":
