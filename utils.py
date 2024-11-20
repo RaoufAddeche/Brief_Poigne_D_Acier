@@ -9,6 +9,9 @@ def ajouter_ligne(item):
         session.commit()
         session.refresh(item)
 
+# def update_ligne(item):    
+    
+
 def obtenir_list_coachs():    
     with Session(engine) as session:
         return session.exec(select(Coachs)).all()
@@ -16,13 +19,19 @@ def obtenir_list_coachs():
 def supprimer_coach(id):
     with Session(engine) as session:
         coach = session.exec(select(Coachs).where(Coachs.id == id)).one()
-        print(f"DEBUG: {coach}")
         session.delete(coach)
         session.commit()
 
 def obtenir_list_cours():    
     with Session(engine) as session:
         return session.exec(select(Cours)).all()
+def obtenir_coach(id):
+     with Session(engine) as session:
+        return session.exec(select(Coachs).where(Coachs.id == id)).one()
+
+        
+        
+        
 
 
 # if __name__ == "__main__":

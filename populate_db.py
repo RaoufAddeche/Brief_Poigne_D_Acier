@@ -35,6 +35,7 @@ def random_specialité()-> str:
             return "Musculation"
         case 5:
             return "Boxe"
+
         
 def generer_horaire(index):
     heure_debut = 9 + index 
