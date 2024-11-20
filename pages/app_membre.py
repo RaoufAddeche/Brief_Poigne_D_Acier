@@ -3,21 +3,23 @@ from generales_fonctions import afficher_navbar, sqmodel_to_dataframe
 from models import Membres, Cours, Cartes_Acces, Inscriptions
 from init_db import engine
 from sqlmodel import select, or_, col, Session
-
+import utils as u
+import pandas as pd
 
 
 afficher_navbar()
 
+def Accueil_membre():
 
+    st.image("nutrition.jpg")
 
 def Consulter_cours():
 
-    if not "consulter_cours" in st.session_state:
-        st.session_state.consulter_cours = False
-
     st.title ("Les cours disponibles")
-    st.session_state.cours_list = u.obtenir_list_cours()
-    st.session_state.consulter_cours = True
+
+    st.session_state.list_cours = u.obtenir_list_cours()
+    data = sqmodel_to_dataframe(st.session_state.list_cours)
+    st.dataframe(data=data)
 
 
 def inscription_cours():
@@ -39,16 +41,14 @@ def Historique():
  
 st.title("Poigne d'Acier 🏋️‍♀️")
 st.subheader("Nutrition & Mode de vie")
-st.image("nutrition.jpg")
 st.sidebar.title("Mon compte")
 
 
-
-choix =st.sidebar.radio("Que veux-tu faire ?", ["Consulter les cours disponibles","S'inscrire à un cours", "Annuler une inscription", "Mon historique"])
+choix =st.sidebar.radio("Que veux-tu faire ?", ["Accueil","Consulter les cours disponibles","S'inscrire à un cours", "Annuler une inscription", "Mon historique"])
 
 if choix == "Consulter les cours disponibles" :
     Consulter_cours() 
-    pass
+    
 
 
 elif choix == "S'inscrire à un cours" :
@@ -63,3 +63,7 @@ elif choix == "Annuler une inscription":
 elif choix == "Mon historique" : 
     Historique()
     pass
+
+else:
+    choix == "Accueil"
+    Accueil_membre()

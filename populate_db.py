@@ -5,7 +5,7 @@ from random import randint
 from sqlmodel import select, Session
 from init_db import engine, Main
 
-from datetime import date
+from datetime import datetime
 
 fake = faker.Faker("fr_FR")
 
@@ -21,10 +21,6 @@ def peupler_bdd(max: int):
         ajouter_ligne(coach)
         
 
-def test_datetime():
-    for x in range(0,10):
-        cours = Cours(nom=random_specialité(), horaire=fake.date_between("today", "+1w"), capacite_max=randint(10, 20))
-        ajouter_ligne(cours)
 
 def random_specialité()-> str:
     x = randint(1, 5)
@@ -39,6 +35,25 @@ def random_specialité()-> str:
             return "Musculation"
         case 5:
             return "Boxe"
+        
+def generer_horaire(index):
+    heure_debut = 9 + index 
+    horaire = datetime.strptime(f"{heure_debut}:00", "%H:%M")  
+    return horaire
+
+def test_datetime():
+
+    for x in range(0, 9):  
+        cours = Cours(
+            nom=random_specialité(),
+            horaire=generer_horaire(x),
+            capacite_max=randint(10, 20),
+        )
+        with Session(engine) as session:
+            coachs = session.exec(select(Coachs).where(cours.nom==Coachs.specialite)).all()
+        cours.coach_id=coachs[randint(0, len(coachs) - 1)].id
+        ajouter_ligne(cours)
+
         
 if __name__ == "__main__":
     Main()

@@ -19,7 +19,10 @@ def supprimer_coach(id):
         print(f"DEBUG: {coach}")
         session.delete(coach)
         session.commit()
-        
+
+def obtenir_list_cours():    
+    with Session(engine) as session:
+        return session.exec(select(Cours)).all()
 
 
 # if __name__ == "__main__":
