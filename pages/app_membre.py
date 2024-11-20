@@ -1,5 +1,5 @@
 import streamlit as st
-from generales_fonctions import afficher_navbar
+from generales_fonctions import afficher_navbar, sqmodel_to_dataframe
 from models import Membres, Cours, Cartes_Acces, Inscriptions
 from init_db import engine
 from sqlmodel import select, or_, col, Session
@@ -12,13 +12,12 @@ afficher_navbar()
 
 def Consulter_cours():
 
-    st.title ("Les cours disponibles")
-    with Session(engine) as session:
-        statement = select(Cours)
-        results= session.exec(statement) 
-        for cours in results:
-            print(cours)
+    if not "consulter_cours" in st.session_state:
+        st.session_state.consulter_cours = False
 
+    st.title ("Les cours disponibles")
+    st.session_state.cours_list = u.obtenir_list_cours()
+    st.session_state.consulter_cours = True
 
 
 def inscription_cours():
