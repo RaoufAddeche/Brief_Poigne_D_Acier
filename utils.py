@@ -1,4 +1,4 @@
-from init_db import engine, Main
+from init_db import engine
 from sqlmodel import select, or_, col, Session
 from models import Membres, Cours, Cartes_Acces, Coachs, Inscriptions
 
