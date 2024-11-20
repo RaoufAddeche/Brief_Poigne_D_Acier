@@ -10,7 +10,7 @@ import pandas as pd
 afficher_navbar()
 
 def Accueil_membre():
-
+    st.subheader("Nutrition & Mode de vie")
     st.image("nutrition.jpg")
 
 def Consulter_cours():
@@ -40,7 +40,6 @@ def Historique():
 #Menu mon compte 
  
 st.title("Poigne d'Acier 🏋️‍♀️")
-st.subheader("Nutrition & Mode de vie")
 st.sidebar.title("Mon compte")
 
 
