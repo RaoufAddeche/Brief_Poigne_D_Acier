@@ -13,25 +13,27 @@ if st.button(label="Gérer les coachs"):
     st.session_state.coach_list = u.obtenir_list_coachs()
     st.session_state.show_coaches = True
         
-col1, col2, col3, col4, col5 = st.columns(5)
 if st.session_state.show_coaches:
-    i = 0
-    data = sqmodel_to_dataframe(st.session_state.coach_list)
-    st.dataframe(data=data)
-    # for coach in st.session_state.coach_list:
-    #     with col1:
-    #         st.write(f"ID : {coach.id}")
-    #     with col2:
-    #         st.write(f"Nom : {coach.nom}")
-    #     with col3:
-    #         st.write(f"Specialité : {coach.specialite}")
-    #     with col4:
-    #         if st.button(label="Supprimer", key=f"c_button_{coach.id}"):
-    #             u.supprimer_coach(coach.id)
-    #             st.session_state.coach_list = u.obtenir_list_coachs()
-    #             st.rerun()
-    #     with col5:
-    #         st.button(label="test2", key=f"c_button_2_{i}")
-        
-        # i+=1
+    # data = sqmodel_to_dataframe(st.session_state.coach_list)
+    # st.dataframe(data=data)
+    
+     # # Show users table 
+    colms = st.columns((1, 2, 2, 1, 1))
+    fields = ["ID", 'NOM', 'SPECIALITE', 'Supprimer']
+    for col, field_name in zip(colms, fields):
+        # header
+        col.write(field_name)
+
+    for coach in st.session_state.coach_list:
+        col1, col2, col3, col4 = st.columns((1, 2, 2, 1))
+        col1.write(coach.id) 
+        col2.write(coach.nom)  
+        col3.write(coach.specialite)
+        button_phold = col4.empty()  # create a placeholder
+        do_action = button_phold.button("X", key=coach.id)
+        if do_action:
+                u.supprimer_coach(coach.id)
+                st.session_state.coach_list = u.obtenir_list_coachs()
+                st.rerun()
+
 
