@@ -5,7 +5,7 @@ from random import randint
 from sqlmodel import select, Session
 from init_db import engine, Main
 
-from datetime import date
+from datetime import date, datetime, timedelta
 
 fake = faker.Faker("fr_FR")
 
@@ -22,8 +22,9 @@ def peupler_bdd(max: int):
         
 
 def test_datetime():
-    for x in range(0,10):
-        cours = Cours(nom=random_specialité(), horaire=fake.date_between("today", "+1w"), capacite_max=randint(10, 20))
+    now = datetime.now()
+    for x in range(9,10):
+        cours = Cours(nom=random_specialité(), horaire=fake.date_between(now, now+timedelta(weeks=1)), capacite_max=randint(10, 20))
         ajouter_ligne(cours)
 
 def random_specialité()-> str:
@@ -39,6 +40,7 @@ def random_specialité()-> str:
             return "Musculation"
         case 5:
             return "Boxe"
+
         
 if __name__ == "__main__":
     Main()

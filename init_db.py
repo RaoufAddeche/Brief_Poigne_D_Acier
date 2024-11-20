@@ -1,15 +1,18 @@
 from sqlmodel import SQLModel, Session, create_engine
 
+
+
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
-engine= create_engine(sqlite_url, echo=True)
+engine= create_engine(sqlite_url, echo=False)
 
 
 def Main():
-    creer_BDD()
+    if __name__ == "__main__":
+         SQLModel.metadata.create_all(engine)
 
 def creer_BDD():    
-    SQLModel.metadata.create_all(engine)
-    
+   pass
+        
 
