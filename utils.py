@@ -1,6 +1,7 @@
 from init_db import engine
 from sqlmodel import select, or_, col, Session
 from models import Membres, Cours, Cartes_Acces, Coachs, Inscriptions
+import datetime 
 
 
 def ajouter_ligne(item):
@@ -25,13 +26,35 @@ def supprimer_coach(id):
 def obtenir_list_cours():    
     with Session(engine) as session:
         return session.exec(select(Cours)).all()
+    
 def obtenir_coach(id):
      with Session(engine) as session:
         return session.exec(select(Coachs).where(Coachs.id == id)).one()
+     
+def inscription_membre(membre_id, cours_id):
+    with Session(engine) as session:
+        inscription = Inscriptions(membre_id=membre_id, cours_id=cours_id, date_inscription= datetime.datetime(2024,11,21))
+        session.add(inscription)
+        session.commit()
 
+def annuler_mon_inscription(cours_id,membre_id):
+    with Session(engine) as session:
+        annulation = session.exec(select(Inscriptions).where(Inscriptions.membre_id== membre_id,Inscriptions.cours_id== cours_id)).one()
+        session.delete(annulation)
+        session.commit()
         
-        
-        
+def obtenir_inscription(id):
+    with Session(engine) as session:
+        obtention_membre = session.exec(select(Inscriptions).where(Inscriptions.membre_id== id)).all()
+        return obtention_membre
+
+def supprimer_cours(id):
+    with Session(engine) as session:
+        cours_du_membre= session.exec(select(Cours).where(Cours.id == id)).one()
+        session.delete(cours_du_membre)
+        session.commit()
+
+
 
 
 # if __name__ == "__main__":
