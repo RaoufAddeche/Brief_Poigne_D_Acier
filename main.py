@@ -6,10 +6,12 @@ from populate_db import peupler_bdd
 
 if not "initialization" in st.session_state:
     #KEEP FOR FUTUR USE MAYBE
-    pass
+    Main()
+    st.session_state.initialization = True
  
 afficher_navbar()
-  
+
+ 
 if st.button("Générer BDD fictive"):
     peupler_bdd(50)
 
