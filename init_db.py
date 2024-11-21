@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Session, create_engine
+from sqlmodel import SQLModel, create_engine
 
 
 
@@ -13,5 +13,6 @@ def Main():
 
 def creer_BDD():    
    pass
-        
 
+if __name__ == "__main__":
+    Main()
