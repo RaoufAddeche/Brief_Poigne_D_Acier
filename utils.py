@@ -54,6 +54,11 @@ def obtenir_inscription(id):
         obtention_membre = session.exec(select(Inscriptions).where(Inscriptions.membre_id== id)).all()
         return obtention_membre
 
+def obtenir_cours(id):
+    with Session(engine) as session:
+        obtention_membre = session.exec(select(Cours).where(Cours.id== id)).one()
+        return obtention_membre
+
 def supprimer_cours(id):
     with Session(engine) as session:
         cours_du_membre= session.exec(select(Cours).where(Cours.id == id)).one()
