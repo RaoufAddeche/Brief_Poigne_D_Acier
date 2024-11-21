@@ -21,10 +21,17 @@ def supprimer_coach(id):
         coach = session.exec(select(Coachs).where(Coachs.id == id)).one()
         session.delete(coach)
         session.commit()
+    
+def supprimer_cours(id):
+    with Session(engine) as session:
+        cours = session.exec(select(Cours).where(Cours.id == id)).one()
+        session.delete(cours)
+        session.commit()
 
 def obtenir_list_cours():    
     with Session(engine) as session:
         return session.exec(select(Cours)).all()
+    
 def obtenir_coach(id):
      with Session(engine) as session:
         return session.exec(select(Coachs).where(Coachs.id == id)).one()
