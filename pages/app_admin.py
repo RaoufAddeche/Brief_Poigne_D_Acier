@@ -3,6 +3,7 @@ from generales_fonctions import afficher_navbar, sqmodel_to_dataframe, return_sp
 import utils as u
 from models import Coachs
 from time import sleep
+from datetime import datetime
 
 def radio_change():
     st.session_state.radio_change_admin = not st.session_state.radio_change_admin
@@ -13,6 +14,7 @@ if not "admin_state" in st.session_state:
     #2 = Form d'ajout de coach
     #3 = Form de modification de coach
     #4 = Afficher liste cours
+    #5 = Form de modification de cours
     st.session_state.radio_change_admin = False
     st.session_state.coach_list = u.obtenir_list_coachs()
     st.session_state.list_cours = u.obtenir_list_cours()
@@ -119,27 +121,32 @@ if st.session_state.admin_state == 4:
         do_action_2 = button_phold_2.button("Mod.", key=f"{cours.id}_2")
         if do_action_2:
                 st.session_state.current_course_id = cours.id
-                st.session_state.admin_state = 6
+                st.session_state.current_coach_id = cours.coach_id
+                st.session_state.admin_state = 5
                 st.rerun()
     
 
-if st.session_state.admin_state == 6:
+if st.session_state.admin_state == 5:
      with st.form("Formulaire de modification de cours", clear_on_submit=True):
-        temp_coach = u.obtenir_cours(st.session_state.current_course_id)
-        input_nom = st.text_area("Nom", value=temp_coach.nom)
-        input_specialite = st.selectbox("Spécialité", ["Yoga", "Pump", "Pilates", "Musculation", "Boxe"], return_specialite_index(temp_coach.specialite))
+        heures = [9, 10, 11, 12, 13, 14, 15, 16]
+        temp_course = u.obtenir_cours(st.session_state.current_course_id)
+        coach_name = u.obtenir_coach(st.session_state.current_coach_id).nom
+        input_specialite = st.selectbox("Discipline", ["Yoga", "Pump", "Pilates", "Musculation", "Boxe"], return_specialite_index(temp_course.nom))
+        input_date = st.date_input("Date", value=temp_course.horaire)
+        input_horaire = st.selectbox("Horaire", heures, index=heures.index(temp_course.horaire.hour))
+        input_coach = st.text_input("Coach", value=coach_name)
+        
         submitted = st.form_submit_button("Valider")
         if submitted:
-            if input_nom.strip() != "":
-                temp_coach.nom = input_nom
-                temp_coach.specialite = input_specialite
-                u.ajouter_ligne(temp_coach)   
-                st.write(":green[Coach modifié avec succès!]")
-                st.session_state.admin_state = 1
-                st.session_state.coach_list = u.obtenir_list_coachs()
-                st.rerun()
-            else:
-                st.write(":red[Veuillez entrer un nom]") 
+            temp_course.nom = input_specialite
+            temp_course.horaire = datetime(input_date.year, input_date.month, input_date.day, input_horaire)
+            u.ajouter_ligne(temp_course)   
+            st.write(":green[Cours modifié avec succès!]")
+            st.session_state.cours_list = u.obtenir_list_cours()
+            st.session_state.admin_state = 4
+            sleep(1)
+            # radio_change()
+            st.rerun()
 
 if st.session_state.admin_state == 99:
     st.write("Gestion Membre")
@@ -148,7 +155,7 @@ st.sidebar.title("Gestion Admin")
 
 choix =st.sidebar.radio("Que veux-tu faire ?", ["Gestion des Coachs","Gestion des Cours","Gestion Membres"], on_change=radio_change)
 
-if st.session_state.radio_change_admin:
+if st.session_state.radio_change_admin == True:
 
     if choix == "Gestion des Coachs" :
         st.session_state.admin_state = 1
@@ -157,8 +164,9 @@ if st.session_state.radio_change_admin:
         st.session_state.admin_state = 4
 
     if choix == "Gestion Membres" :
-        st.session_state.admin_state = 5
+        st.session_state.admin_state = 99
     radio_change()   
+    print("DEBUG CHOICE")
     st.rerun()
      
 
