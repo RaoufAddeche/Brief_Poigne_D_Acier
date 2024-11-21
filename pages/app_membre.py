@@ -1,6 +1,6 @@
 import streamlit as st
 from generales_fonctions import afficher_navbar, sqmodel_to_dataframe
-from models import Membres, Cours, Cartes_Acces, Inscriptions
+from models import Membres, Cours, Cartes_Acces, Inscriptions, Coachs
 from init_db import engine
 from sqlmodel import select, or_, col, Session
 import utils as u
@@ -8,6 +8,10 @@ import pandas as pd
 
 
 afficher_navbar()
+if not "membre_state" in st.session_state:
+    st.session_state.membre_state = 0
+    st.session_state.modify_state = 1
+    st.session_state.coach_list = u.obtenir_list_coachs()
 
 def Accueil_membre():
     st.subheader("Nutrition & Mode de vie")
@@ -25,7 +29,27 @@ def Consulter_cours():
 def inscription_cours():
 
     st.title("Je veux m'inscrire")
+     # # Show users table
+    st.session_state.list_cours = u.obtenir_list_cours()
+    colms = st.columns((1, 2, 2, 1, 1))
+    fields = ["Coach", 'Horaire', 'Specialité', 'inscription']
+    
+    for col, field_name in zip(colms, fields):
+        # header
+        col.write(field_name)
 
+    for cours,coach in st.session_state.list_cours:
+        col1, col2, col3, col4 = st.columns((1, 2, 2, 1))
+
+        col1.write(coach.nom) 
+        col2.write(cours.horaire)  
+        col3.write(cours.nom)
+        button_phold = col4.empty()  # create a placeholder
+
+        do_action = button_phold.button("✅", key=cours.id)
+
+        if do_action:
+            pass
 
 def annuler_inscription():
 
