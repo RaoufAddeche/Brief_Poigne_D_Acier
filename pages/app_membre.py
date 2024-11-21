@@ -76,8 +76,8 @@ def annuler_inscription():
         if do_action:
             st.write(inscription.id)
             st.write(st.session_state.id_membre_actuel)
-            u.annuler_mon_inscription(inscription.id, st.session_state.id_membre_actuel)
-            st.session_state.list_inscription_actuel = u.obtenir_list_inscription()
+            u.annuler_mon_inscription(inscription.cours_id, st.session_state.id_membre_actuel)
+            st.session_state.list_inscriptions_actuel = u.obtenir_inscription(st.session_state.id_membre_actuel)
             st.rerun()
 
 
