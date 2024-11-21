@@ -72,7 +72,7 @@ def annuler_inscription():
         col1.write(inscription.date_inscription)  
         col2.write(inscription.id)
         button_phold = col3.empty()
-        do_action = button_phold.button("X", key=inscription.id)
+        do_action = button_phold.button("❌", key=inscription.id)
         if do_action:
             st.write(inscription.id)
             st.write(st.session_state.id_membre_actuel)
@@ -86,6 +86,8 @@ def annuler_inscription():
 def Historique():
 
     st.title("Accès à mon historique")
+    
+
 
 
 #Menu mon compte 

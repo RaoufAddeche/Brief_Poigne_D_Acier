@@ -60,6 +60,10 @@ def supprimer_cours(id):
         session.delete(cours_du_membre)
         session.commit()
 
+def obtenir_historique(membre_id):
+    with Session(engine) as session:
+        historique_client=  session.excec(select(Inscriptions).where(Inscriptions.membre_id == membre_id)).all()
+        return historique_client
 
 
 
