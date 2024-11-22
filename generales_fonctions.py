@@ -4,6 +4,7 @@ import pandas as pd
 def afficher_navbar():
     with st.sidebar:
         st.subheader("Navigation")
+        st.page_link("main.py", label="Debug")
         st.page_link("pages/app_membre.py", label="Membres")
         st.page_link("pages/app_admin.py", label="admin")
         

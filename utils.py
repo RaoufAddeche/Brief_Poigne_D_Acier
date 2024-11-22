@@ -13,7 +13,11 @@ def ajouter_ligne(item):
 def obtenir_list_coachs():    
     with Session(engine) as session:
         return session.exec(select(Coachs)).all()
-    
+
+def obtenir_list_membres():
+      with Session(engine) as session:
+        return session.exec(select(Membres)).all()
+
 def obtenir_list_coachs_par_specialite(spe: str):
     with Session(engine) as session:
         return session.exec(select(Coachs).where(Coachs.specialite == spe)).all()
@@ -41,6 +45,10 @@ def obtenir_coach_par_id(id):
 def obtenir_coach_par_nom(nom):
     with Session(engine) as session:
         return session.exec(select(Coachs).where(Coachs.nom == nom)).first()
+
+def obtenir_membre_par_nom(nom):
+    with Session(engine) as session:
+        return session.exec(select(Membres).where(Membres.nom == nom)).first()
      
 def inscription_membre(membre_id, cours_id):
     with Session(engine) as session:

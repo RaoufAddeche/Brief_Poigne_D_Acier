@@ -18,8 +18,8 @@ def admin_navigation():
 
     if st.session_state.admin_radio == "Gestion Membres" :
         st.session_state.admin_state = 99
-    # radio_change()   
-    # print("DEBUG CHOICE")
+
+
      
 
 if not "admin_state" in st.session_state:
@@ -33,6 +33,9 @@ if not "admin_state" in st.session_state:
     st.session_state.radio_change_admin = False
     st.session_state.coach_list = u.obtenir_list_coachs()
     st.session_state.list_cours = u.obtenir_list_cours()
+
+if not "coach__list" in st.session_state :
+    st.session_state.coach_list = u.obtenir_list_coachs()
 
 # print(f"DEBUG CHOICE VALUE = {st.session_state.radio_change_admin}")
 

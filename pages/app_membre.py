@@ -8,9 +8,8 @@ import pandas as pd
 
 
 afficher_navbar()
-if not "membre_state" in st.session_state:
-    st.session_state.membre_state = 0
-    st.session_state.id_membre_actuel = 9
+st.session_state.admin_state = 1
+
 if "list_inscriptions_actuel" not in st.session_state:
     st.session_state.list_inscriptions_actuel = u.obtenir_inscription(st.session_state.id_membre_actuel)
 if "list_inscriptions_actuel" not in st.session_state:
@@ -32,36 +31,35 @@ def Consulter_cours():
 def inscription_cours():
 
     st.title("Je veux m'inscrire")
-    st.session_state.list_cours = u.obtenir_list_cours()
-    st.session_state.coach_list = u.obtenir_list_coachs()
-    
-    colms = st.columns((1, 2, 1, 1))
-    fields = ["Coach", 'Horaire', 'Spécialité', 'inscription']
-    
+    colms = st.columns((1, 2, 2, 1))
+    fields = ['Coach', 'HORAIRE', 'Discipline.', 'Inscription']
     for col, field_name in zip(colms, fields):
+        # header
         col.write(field_name)
 
-    for cours,coach in zip(st.session_state.list_cours,st.session_state.coach_list):
-        col1, col2, col3, col4 = st.columns((1, 2, 1, 1))
-
-        col1.write(coach.nom) 
-        col2.write(cours.horaire)  
-        col3.write(cours.nom)
-        button_phold = col4.empty()  
-
+    for cours in st.session_state.list_cours:
+        
         inscrit= False
         for inscription in st.session_state.list_inscriptions_actuel:
             if inscription.cours_id == cours.id:
                 inscrit = True
                 break
-        if inscrit :
-            button_phold = col4.empty()
-            do_action = button_phold.button("❌", key=cours.id)
-            if do_action:
-                u.annuler_mon_inscription(cours.id, st.session_state.id_membre_actuel)
-                st.session_state.list_inscriptions_actuel = u.obtenir_inscription(st.session_state.id_membre_actuel)
-                st.rerun()
-        else:
+        if not inscrit :
+            col1, col2, col3, col4 = st.columns((1, 2, 2, 1))
+            try:
+                col1.write(u.obtenir_coach_par_id(cours.coach_id).nom)
+            except:
+                col1.write(":red[NULL]")
+            col2.write(cours.horaire)
+            col3.write(cours.nom)   
+            
+            # button_phold = col4.empty()
+            # do_action = button_phold.button("❌", key=cours.id)
+            # if do_action:
+            #     u.annuler_mon_inscription(cours.id, st.session_state.id_membre_actuel)
+            #     st.session_state.list_inscriptions_actuel = u.obtenir_inscription(st.session_state.id_membre_actuel)
+            #     st.rerun()
+      
             button_phold = col4.empty()
             do_action = button_phold.button("✅", key=cours.id)
             if do_action:
@@ -90,13 +88,19 @@ def annuler_inscription():
 
 
     for inscription in st.session_state.list_inscriptions_actuel:
-        cours = u.obtenir_cours(inscription.cours_id)
-        coach = u.obtenir_coach(cours.coach_id)
+        try:
+            cours = u.obtenir_cours(inscription.cours_id)
+        except:
+            continue
+        coach = u.obtenir_coach_par_id(cours.coach_id)
         col1, col2, col3, col4 = st.columns((2,1,2, 2))
  
         col1.write(cours.horaire)  
         col2.write(cours.nom)
-        col3.write(coach.nom)
+        try:
+            col3.write(coach.nom)
+        except:
+            col3.write(":red-background[NULL]")
 
         button_phold = col4.empty()
         do_action = button_phold.button("❌", key=inscription.id)
@@ -124,10 +128,13 @@ def Historique():
     for ligne in st.session_state.historique:
         col1, col2, col3 = st.columns((2, 2, 2,))
         
-
+        try:
+            nom_coach = (u.obtenir_coach_par_id(ligne.coach_id).nom)
+        except:
+            nom_coach = ":red[NULL]"
         col1.write(ligne.nom) 
         col2.write(ligne.horaire)  
-        col3.write(ligne.coach_id)
+        col3.write(nom_coach)
 
 
 
@@ -138,7 +145,7 @@ st.title("Poigne d'Acier 🏋️‍♀️")
 st.sidebar.title("Mon compte")
 
 
-choix =st.sidebar.radio("Que veux-tu faire ?", ["Accueil","Consulter les cours disponibles","S'inscrire à un cours", "Annuler une inscription", "Mon historique"])
+choix =st.sidebar.radio(f"Que veux-tu faire, {st.session_state.nom_membre_actuel} ?", ["Accueil","Consulter les cours disponibles","S'inscrire à un cours", "Annuler une inscription", "Mon historique"])
 
 if choix == "Consulter les cours disponibles" :
     Consulter_cours() 
