@@ -83,6 +83,16 @@ def obtenir_membres_inscrits(cours_id):
         return inscrits
 
 
+def obtenir_historique(membre_id):
+    with Session(engine) as session:
+        historique_client = session.exec(select(Inscriptions, Cours).join(Cours, Cours.id == Inscriptions.cours_id).where(Inscriptions.membre_id == membre_id)).all()
+        
+        cours_details = []
+        
+        for inscription, cours in historique_client:
+            cours_details.append(cours)
+        
+        return cours_details
 
 
 # if __name__ == "__main__":
