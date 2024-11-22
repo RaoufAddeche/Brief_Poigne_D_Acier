@@ -24,7 +24,8 @@ def peupler_bdd(max: int):
         cours = Cours(nom=random_specialité(), horaire=generer_horaire(), capacite_max=randint(10, 20))
         with Session(engine) as session:
             coachs = session.exec(select(Coachs).where(cours.nom==Coachs.specialite)).all()
-            cours.coach_id=coachs[randint(0, len(coachs) - 1)].id
+            if len(coachs) > 0:
+                cours.coach_id=coachs[randint(0, len(coachs) - 1)].id
         ajouter_ligne(cours)
         
 

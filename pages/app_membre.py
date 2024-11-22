@@ -40,7 +40,7 @@ def inscription_cours():
         col.write(field_name)
 
     for cours,coach in zip(st.session_state.list_cours,st.session_state.coach_list):
-        col1, col2, col3, col4 = st.columns((1, 2, 2, 1))
+        col1, col2, col3, col4, col5 = st.columns((1, 2, 2, 1, 1))
 
         col1.write(coach.nom) 
         col2.write(cours.horaire)  
@@ -53,6 +53,7 @@ def inscription_cours():
             u.inscription_membre(st.session_state.id_membre_actuel,cours.id)
             st.session_state.list_cours = u.obtenir_list_cours()
             st.rerun()
+        col5.write(cours.id)
 
 def annuler_inscription():
 

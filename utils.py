@@ -10,12 +10,13 @@ def ajouter_ligne(item):
         session.commit()
         session.refresh(item)
 
-# def update_ligne(item):    
-    
-
 def obtenir_list_coachs():    
     with Session(engine) as session:
         return session.exec(select(Coachs)).all()
+    
+def obtenir_list_coachs_par_specialite(spe: str):
+    with Session(engine) as session:
+        return session.exec(select(Coachs).where(Coachs.specialite == spe)).all()
 
 def supprimer_coach(id):
     with Session(engine) as session:
@@ -33,9 +34,13 @@ def obtenir_list_cours():
     with Session(engine) as session:
         return session.exec(select(Cours)).all()
     
-def obtenir_coach(id):
-     with Session(engine) as session:
-        return session.exec(select(Coachs).where(Coachs.id == id)).one()
+def obtenir_coach_par_id(id):
+    with Session(engine) as session:
+        return session.exec(select(Coachs).where(Coachs.id == id)).one_or_none()
+
+def obtenir_coach_par_nom(nom):
+    with Session(engine) as session:
+        return session.exec(select(Coachs).where(Coachs.nom == nom)).first()
      
 def inscription_membre(membre_id, cours_id):
     with Session(engine) as session:
@@ -44,6 +49,7 @@ def inscription_membre(membre_id, cours_id):
         session.commit()
 
 def annuler_mon_inscription(cours_id,membre_id):
+    print(f"DEBUG : Membre id = {membre_id} ; Cours_id = {cours_id}")
     with Session(engine) as session:
         annulation = session.exec(select(Inscriptions).where(Inscriptions.membre_id== membre_id,Inscriptions.cours_id== cours_id)).one()
         session.delete(annulation)
@@ -64,6 +70,17 @@ def supprimer_cours(id):
         cours_du_membre= session.exec(select(Cours).where(Cours.id == id)).one()
         session.delete(cours_du_membre)
         session.commit()
+
+def obtenir_membres_inscrits(cours_id):
+    with Session(engine) as session:
+        membres_inscrits = session.exec(select(Inscriptions, Membres).join(Membres, Membres.id == Inscriptions.membre_id).where(Inscriptions.cours_id== cours_id)).all()
+
+        inscrits = []
+
+        for inscription, i in membres_inscrits:
+            inscrits.append(i)
+
+        return inscrits
 
 
 
